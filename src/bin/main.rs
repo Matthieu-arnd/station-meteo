@@ -7,6 +7,7 @@
 )]
 
 use esp_hal::clock::CpuClock;
+use esp_hal::gpio::Pin;
 use esp_hal::{
     main,
     gpio::{Level,Input,InputConfig, Output, OutputConfig},
@@ -40,8 +41,22 @@ fn main() -> ! {
         DHT11.set_high();
         delay_start =Instant::now();
         while delay_start.elapsed() < Duration::from_micros(48) {}
+        DHT11 = Input::new(_peripherals.GPIO, InputConfig::default());
 
     }
 
     // for inspiration have a look at the examples at https://github.com/esp-rs/esp-hal/tree/esp-hal-v1.0.0-rc.0/examples/src/bin
+}
+
+fn wait_until_state<T: Pin>(pin:T) -> Result<(), P::Error> {
+    loop {
+                if pin.is_low()? {
+                    break;
+                }
+                if pin.is_high()? {
+                    break;
+                }
+        }
+    
+    Ok(())
 }
